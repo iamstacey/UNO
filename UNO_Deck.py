@@ -13,7 +13,7 @@ class Deck():
             if category == 'Change_color':
                 i = 0
                 while i < 4:
-                    change_color_card = Card(' ', '⊕', 'Black', category)
+                    change_color_card = Card(' ', '©', 'Black', category)
                     self.deck.append(change_color_card)
                     i += 1
             if category == 'Drag_4':
@@ -29,11 +29,11 @@ class Deck():
                         self.deck.append(normal_card)
                         self.deck.append(normal_card)
                 if category == 'Block':
-                    block_card = Card(' ', '⊘', color, category)
+                    block_card = Card(' ', 'Ø', color, category)
                     self.deck.append(block_card)
                     self.deck.append(block_card)
                 if category == 'Reverse':
-                    reverse_card = Card(' ', '⇎', color, category)
+                    reverse_card = Card(' ', '«-»', color, category)
                     self.deck.append(reverse_card)
                     self.deck.append(reverse_card)
                 if category == 'Drag_2':
