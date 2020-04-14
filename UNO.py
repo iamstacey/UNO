@@ -55,16 +55,14 @@ class Game():
                 self.players.append(player)
         return self.players_number
 
-    #this function assign the player's first cards
-    def assign_player_cards(self):
-        for player in self.players:
-            count = 0
-            while count < 7:
-                card = choice(uno_deck)
-                player.cards.append(card)
-                uno_deck.remove(card)
-                count += 1
-        return self.players
+    #this function give cards to the players deppending of the number of the input
+    def assign_player_cards(self, player, number_of_cards):
+        count = 0
+        while count < number_of_cards:
+            card = choice(uno_deck)
+            player.cards.append(card)
+            count += 1
+        return player.cards
     #this function revise if the player doesn't have any card
     #if that is true, the player is the winner
     def looking_for_winner(self, participant):
@@ -74,14 +72,19 @@ class Game():
             self.winner = None
     
         return self.winner
+    
+    #this function give the first 7 cards to all the players
+    def first_cards(self):
+        for player in self.players:
+            self.assign_player_cards(player, 7)
     #this function makes 
     def first_card_to_match(self):
         while self.card_to_match.category != 'Normal':
             self.card_to_match = choice(uno_deck)
         
-
-    def player_system(self):
         
+    def player_system(self):
+        self.first_cards()
         while self.winner == None:
         
             counter = 0
@@ -95,18 +98,17 @@ class Game():
                 else:
                     print('Card to match: ' + self.card_to_match.show_card())
                 try:
-                    if len(current_player.cards) == 1:
-                        print(Fore.RED + "Oh, i see a distracted player with just one card. You are going to receive two more cards so you don't need to worry about shouting UNO" + Style.RESET_ALL)
-                        first_card = choice(uno_deck)
-                        second_card = choice(uno_deck)
-                        current_player.cards.append(first_card)
-                        current_player.cards.append(second_card)
-                    
                     action = input('Drop, drag or UNO: ')
 
                     if action.capitalize() == 'Drop':
-                        try:
+                        try: 
+                            if len(current_player.cards) == 1:
+                                print(Fore.RED + "Oh, i see a distracted player with just one card. You are going to receive two more cards so you don't need to worry about shouting UNO" + Style.RESET_ALL)
+                                self.assign_player_cards(current_player, 2)
+
+
                             card_number = int(input('Write the number of the card to drop: '))
+
                             dropped_card = current_player.cards[card_number]
                             if dropped_card.color == self.card_to_match.color:
 
@@ -135,33 +137,16 @@ class Game():
                                 elif dropped_card.category == 'Drag_2':
                                     if current_player == self.players[-1]:
                                         print('{} is going to receive a beatiful gift! {} dropped a Drag 2 card, now {} have two more cards. What a good friend'.format(self.players[0].name, current_player.name, self.players[0].name))
-                                        first_card = choice(uno_deck)
-                                        second_card = choice(uno_deck)
-                                        
-                                        self.players[0].cards.append(first_card)
-                                        self.players[0].cards.append(second_card)
-                                        
+
+                                        self.assign_player_cards(self.players[0], 2)
                                         self.card_to_match = dropped_card
-                                        
                                         current_player.cards.remove(dropped_card)
-                                        
-                                        uno_deck.remove(first_card)
-                                        uno_deck.remove(second_card)
                                         self.looking_for_winner(current_player)
                                         counter += 1
                                     else:
                                         
                                         print('{} is going to receive a beatiful gift! {} dropped a Drag 2 card, now {} have two more cards. What a good friend'.format(self.players[counter + 1].name, current_player.name, self.players[counter + 1].name))
-                                        
-                                        first_card = choice(uno_deck)
-                                        second_card = choice(uno_deck)
-                                        
-                                        self.players[counter + 1].cards.append(first_card)
-                                        self.players[counter + 1].cards.append(second_card)
-                                        
-                                        uno_deck.remove(first_card)
-                                        uno_deck.remove(second_card)
-
+                                        self.assign_player_cards(self.players[counter + 1], 2)
                                         self.card_to_match = dropped_card
                                         
                                         current_player.cards.remove(dropped_card)
@@ -200,12 +185,7 @@ class Game():
                                         if current_player == self.players[-1]:
                                             print("The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[0].name))
                                             
-                                            i = 0
-                                            while i < 4:
-                                                card = choice(uno_deck)
-                                                self.players[0].cards.append(card)
-                                                uno_deck.remove(card)
-                                                i += 1
+                                            self.assign_player_cards(self.players[0], 4)
 
                                             try:
                                                 new_color = input('Write the new color: ')
@@ -223,13 +203,7 @@ class Game():
                                         else:
                                             print("The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[counter + 1].name))
                                             
-                                            i = 0
-                                            while i < 4:
-                                                card = choice(uno_deck)
-                                                self.players[counter + 1].cards.append(card)
-                                                uno_deck.remove(card)
-                                                i += 1
-
+                                            self.assign_player_cards(self.players[counter + 1], 4)
                                             current_player.cards.remove(dropped_card)
                                             try:
                                                 new_color = input('Write the new color: ')
@@ -314,7 +288,6 @@ class Game():
 
 uno = Game()
 uno.ask_players_number()
-uno.assign_player_cards()
 uno.first_card_to_match()
 uno.player_system()
 uno.show_points()
