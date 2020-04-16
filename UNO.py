@@ -81,12 +81,24 @@ class Game():
     def first_card_to_match(self):
         while self.card_to_match.category != 'Normal':
             self.card_to_match = choice(uno_deck)
-        
-        
+    
+    def change_color(self, player):
+        while self.card_to_match.category != 'Colour':
+            try:
+                new_color = input('Write the new color: ')
+                if new_color.capitalize() in deck.colours:
+                    self.card_to_match = Card(" ", " ", " ", 'Colour')       
+                    self.card_to_match.color = new_color.capitalize()
+                    print('{} changed the color to {}'.format(player.name, self.card_to_match.color))
+                else:
+                    print(Fore.RED + "The color that you are trying to put is unavaible" + Style.RESET_ALL)
+            except:
+                print(Fore.RED + "The color that you are trying to put is unavaible" + Style.RESET_ALL)
+        return self.card_to_match
+     
     def player_system(self):
         self.first_cards()
         while self.winner == None:
-        
             counter = 0
             while counter < self.players_number:
                 current_player = self.players[counter]
@@ -101,61 +113,46 @@ class Game():
                     action = input('Drop, drag or UNO: ')
 
                     if action.capitalize() == 'Drop':
+                       
                         try: 
-                            if len(current_player.cards) == 1:
-                                print(Fore.RED + "Oh, i see a distracted player with just one card. You are going to receive two more cards so you don't need to worry about shouting UNO" + Style.RESET_ALL)
-                                self.assign_player_cards(current_player, 2)
-
-
                             card_number = int(input('Write the number of the card to drop: '))
-
+ 
                             dropped_card = current_player.cards[card_number]
                             if dropped_card.color == self.card_to_match.color:
-
                                 if dropped_card.category == 'Normal':
-                                    print('{} dropped: {}'.format(current_player.name, dropped_card.show_card()))
+                                    print(Fore.GREEN + '{} dropped: {}'.format(current_player.name, dropped_card.show_card()) + Style.RESET_ALL)
                                     self.card_to_match = dropped_card
                                     current_player.cards.remove(dropped_card)
-                                    self.looking_for_winner(current_player)
                                     counter += 1
+
                                 elif dropped_card.category == 'Block':
                                     if current_player == self.players[-1]:
-
-                                        print("{} can sit down and take a rest. {} blocked your next move".format(self.players[0].name, current_player.name))
+                                        print(Fore.GREEN + "{} can sit down and take a rest. {} blocked your next move".format(self.players[0].name, current_player.name) + Style.RESET_ALL)
                                         self.card_to_match = dropped_card
                                         current_player.cards.remove(dropped_card)
-
-                                        self.looking_for_winner(current_player)
                                         counter = 1
                                     else:
-                                        print('{} can sit down and take a rest. {} blocked your next move'.format(self.players[counter + 1].name, current_player.name))
+                                        print(Fore.GREEN + '{} can sit down and take a rest. {} blocked your next move'.format(self.players[counter + 1].name, current_player.name) + Style.RESET_ALL)
                                         self.card_to_match = dropped_card
                                         current_player.cards.remove(dropped_card)
-                                        self.looking_for_winner(current_player)
                                         counter += 2
-                                        
+                                            
                                 elif dropped_card.category == 'Drag_2':
                                     if current_player == self.players[-1]:
-                                        print('{} is going to receive a beatiful gift! {} dropped a Drag 2 card, now {} have two more cards. What a good friend'.format(self.players[0].name, current_player.name, self.players[0].name))
-
-                                        self.assign_player_cards(self.players[0], 2)
+                                        print(Fore.GREEN + '{} is going to receive a beatiful gift! {} dropped a Drag 2 card, now {} have two more cards. What a good friend'.format(self.players[0].name, current_player.name, self.players[0].name) + Style.RESET_ALL)
                                         self.card_to_match = dropped_card
                                         current_player.cards.remove(dropped_card)
-                                        self.looking_for_winner(current_player)
+                                        self.assign_player_cards(self.players[0], 2)
                                         counter += 1
                                     else:
-                                        
-                                        print('{} is going to receive a beatiful gift! {} dropped a Drag 2 card, now {} have two more cards. What a good friend'.format(self.players[counter + 1].name, current_player.name, self.players[counter + 1].name))
-                                        self.assign_player_cards(self.players[counter + 1], 2)
+                                        print(Fore.GREEN + '{} is going to receive a beatiful gift! {} dropped a Drag 2 card, now {} have two more cards. What a good friend'.format(self.players[counter + 1].name, current_player.name, self.players[counter + 1].name) + Style.RESET_ALL)
                                         self.card_to_match = dropped_card
-                                        
                                         current_player.cards.remove(dropped_card)
-                                        
-                                        self.looking_for_winner(current_player)
+                                        self.assign_player_cards(self.players[counter + 1], 2)
                                         counter += 1
-                            
-                                else:
-                                    print('{} dropped a reverse card. The order of the game is going to change.'.format(current_player.name))
+
+                                elif dropped_card.category == 'Reverse':
+                                    print(Fore.GREEN + '{} dropped a reverse card. The order of the game is going to change.'.format(current_player.name) + Style.RESET_ALL)
                                     i = self.players_number - 1
                                     new_order = []
                                     while i > -1:
@@ -164,97 +161,65 @@ class Game():
                                     self.players = new_order
                                     self.card_to_match = dropped_card
                                     current_player.cards.remove(dropped_card)
-
-                                    self.looking_for_winner(current_player)
                                     counter += 1
 
-
-                            else:
-                                
+                            else:                              
                                 if dropped_card.category == 'Normal':
                                     if dropped_card.character == self.card_to_match.character:
-                                        print('{} dropped: {}'.format(current_player.name, dropped_card.show_card()))
+                                        print( Fore.GREEN +'{} dropped: {}'.format(current_player.name, dropped_card.show_card()))
                                         self.card_to_match = dropped_card
                                         current_player.cards.remove(dropped_card)
-                                        self.looking_for_winner(current_player)
                                         counter += 1
-                            
+                                    else:
+                                        print(Fore.RED + "This cards dosen't match. Try again" + Style.RESET_ALL)
                                 elif dropped_card.color == 'Black':
                                     if dropped_card.category == 'Drag_4':
                 
                                         if current_player == self.players[-1]:
-                                            print("The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[0].name))
-                                            
+                                            print(Fore.GREEN + "The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[0].name) + Style.RESET_ALL)
                                             self.assign_player_cards(self.players[0], 4)
-
-                                            try:
-                                                new_color = input('Write the new color: ')
-                                                if new_color.capitalize() not in deck.colours:
-                                                    print('The color that you are trying to put is unavaible')          
-                                                else:
-                                                    self.card_to_match = Card(" ", " ", " ", 'Colour')       
-                                                    self.card_to_match.color = new_color.capitalize()
-                                                    current_player.cards.remove(dropped_card)
-                                                    print('{} changed the color to {}'.format(current_player.name, self.card_to_match.color))
-                                                    self.looking_for_winner(current_player)
-                                                    counter += 2
-                                            except:
-                                                print('The color that you are trying to put is unavaible')
-                                        else:
-                                            print("The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[counter + 1].name))
-                                            
-                                            self.assign_player_cards(self.players[counter + 1], 4)
+                                            self.change_color(current_player)
+                                            self.card_to_match = dropped_card
                                             current_player.cards.remove(dropped_card)
-                                            try:
-                                                new_color = input('Write the new color: ')
-                                                if new_color.capitalize() not in deck.colours:
-                                                    print('The color that you are trying to put is unavaible')          
-                                                else:
-                                                    self.card_to_match = Card(" ", " ", " ", 'Colour')       
-                                                    self.card_to_match.color = new_color.capitalize()
-                                                    print('{} changed the color to {}'.format(current_player.name, self.card_to_match.color))
-                                                    self.looking_for_winner(current_player)
-                                                    counter += 1
-                                            except:
-                                                print('The color that you are trying to put is unavaible')
-                                            
-                                            
+                                            counter += 2        
+                                        else:
+                                            print(Fore.GREEN + "The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[counter + 1].name) + Style.RESET_ALL)
+                                            self.assign_player_cards(self.players[counter + 1], 4)
+                                            self.change_color(current_player)
+                                            self.card_to_match = dropped_card
+                                            current_player.cards.remove(dropped_card)
+                                            counter += 1
                                     else:
-                                        print('{} drop a card to change the color'.format(current_player.name))
-                                    
-                                        try:
-                                            new_color = input('Write the new color: ')
-                                            if new_color.capitalize() not in deck.colours:
-                                                print("The color that you are trying to put is unavaible")
-                                            else:
-                                                self.card_to_match = Card(" ", " ", " ", 'Colour')
-                                                current_player.cards.remove(dropped_card)
-                                                self.card_to_match.color = new_color.capitalize()
-                                                print('{} changed the color to {}'.format(current_player.name, self.card_to_match.color))
-                                                
-                                                self.looking_for_winner(current_player)
-                                                counter += 1
-                                        except:
-                                            print("The color that you are trying to put is unavaible")                
+                                        print(Fore.GREEN + '{} drop a card to change the color'.format(current_player.name) + Style.RESET_ALL)
+                                                            
+                                        self.card_to_match = dropped_card
+                                        current_player.cards.remove(dropped_card)
+                                        self.change_color(current_player)
+                                        counter += 1
+                                else:
+                                    print(Fore.RED + "This cards dosen't match. Try again" + Style.RESET_ALL)
+                                                                     
                         except:
-                            print("What are you trying to drop? Don't be a cheater and try again")    
+                            print(Fore.RED + "What are you trying to drop? Don't be a cheater and try again" + Style.RESET_ALL)       
 
                     elif action.capitalize() == 'Drag':
                         dragged_card = choice(uno_deck)
                         current_player.cards.append(dragged_card)
                         print('You took: {}'.format(dragged_card.show_card()))
                         counter += 1
+
                     elif action.upper() == 'UNO':
                         if len(current_player.cards) == 1:
-                            print(Fore.GREEN + "{} just have one card! UNO".format(current_player.name) + Style.RESET_ALL)
+                            print(Fore.YELLOW + "{} just have one card! UNO".format(current_player.name) + Style.RESET_ALL)
                         else:
-                            print("{} shouted UNO, but doesn't have one card. {} is going to receive two cards for being a clown".format(current_player.name, current_player.name))
-                            first_card = choice(uno_deck)
-                            second_card = choice(uno_deck)
-                            current_player.cards.append(first_card)
-                            current_player.cards.append(second_card)
+                            print(Fore.YELLOW + "{} shouted UNO, but doesn't have one card. {} is going to receive two cards for being a clown".format(current_player.name, current_player.name) + Style.RESET_ALL)
+                            self.assign_player_cards(current_player, 2)
+                    else:
+                        print(Fore.RED + "Select one of the avaible options" + Style.RESET_ALL)
                 except:
-                    print("Select one of the avaible options")
+                    print(Fore.RED + "Select one of the avaible options" + Style.RESET_ALL)
+    
+                self.looking_for_winner(current_player)  
                 if current_player == self.winner:
                     break
 
