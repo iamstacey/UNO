@@ -96,6 +96,14 @@ class Game():
                 print(Fore.RED + "The color that you are trying to put is unavaible" + Style.RESET_ALL)
         return self.card_to_match
      
+    def verify_uno(self, player):
+        if len(player.cards) == 1:
+            if player.UNO == True:
+                print(Fore.GREEN + "You are doing well, you are about to win. Unless somebody decide to drop a 4..." + Style.RESET_ALL)
+            else:
+                print(Fore.RED + "You didn't shout UNO and you have one card. You are going to receive two cards so you won't worry about shouting UNO." + Style.RESET_ALL)
+                self.assign_player_cards(player, 2)
+
     def player_system(self):
         self.first_cards()
         while self.winner == None:
@@ -113,7 +121,7 @@ class Game():
                     action = input('Drop, drag or UNO: ')
 
                     if action.capitalize() == 'Drop':
-                       
+                        self.verify_uno(current_player)
                         try: 
                             card_number = int(input('Write the number of the card to drop: '))
  
@@ -179,14 +187,13 @@ class Game():
                                             print(Fore.GREEN + "The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[0].name) + Style.RESET_ALL)
                                             self.assign_player_cards(self.players[0], 4)
                                             self.change_color(current_player)
-                                            self.card_to_match = dropped_card
                                             current_player.cards.remove(dropped_card)
                                             counter += 2        
                                         else:
                                             print(Fore.GREEN + "The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[counter + 1].name) + Style.RESET_ALL)
                                             self.assign_player_cards(self.players[counter + 1], 4)
                                             self.change_color(current_player)
-                                            self.card_to_match = dropped_card
+                                        
                                             current_player.cards.remove(dropped_card)
                                             counter += 1
                                     else:
@@ -210,6 +217,7 @@ class Game():
 
                     elif action.upper() == 'UNO':
                         if len(current_player.cards) == 1:
+                            current_player.UNO = True
                             print(Fore.YELLOW + "{} just have one card! UNO".format(current_player.name) + Style.RESET_ALL)
                         else:
                             print(Fore.YELLOW + "{} shouted UNO, but doesn't have one card. {} is going to receive two cards for being a clown".format(current_player.name, current_player.name) + Style.RESET_ALL)
