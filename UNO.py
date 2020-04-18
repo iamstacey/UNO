@@ -39,16 +39,14 @@ class Game():
 
                 if election.upper() == 'A':
                     self.players_number = 2
+                elif election.upper() == 'B':
+                    self.players_number = 3
+                elif election.upper() == 'C':
+                    self.players_number = 4
                 else:
-                    if election.upper() == 'B':
-                        self.players_number = 3
-                    else:
-                        if election.upper() == 'C':
-                            self.players_number = 4
-                        else:
-                            print('Oh, it looks like you are trying to select an unplayable number of players. Try again with one of the options.')
+                    print(Fore.red+ 'Oh, it looks like you are trying to select an unplayable number of players. Try again with one of the options.' + Style.RESET_ALL)
             except:
-                print('Oh, it looks like you are trying to select an unplayable number of players. Try again with one of the options.')               
+                print(Fore.RED +'Oh, it looks like you are trying to select an unplayable number of players. Try again with one of the options.' + Style.RESET_ALL)               
               
             for i in range(1, self.players_number + 1):
                 player = Player(i)
