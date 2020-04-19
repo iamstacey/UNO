@@ -16,8 +16,12 @@ class Game():
         self.winner = None
         self.card_to_match = choice(uno_deck)
 
-    #The first function of the game print the three avaible options of how many players can play uno
+    
     def ask_players_number(self):
+        """Ask how many players are going to be
+        playing the game, then ask their names and save them 
+        at the players attributte"""
+
         print(Fore.MAGENTA + """
                              
 ,--. ,--.,--.  ,--. ,-----.  
@@ -53,34 +57,49 @@ class Game():
                 self.players.append(player)
         return self.players_number
 
-    #this function give cards to the players deppending of the number of the input
+   
     def assign_player_cards(self, player, number_of_cards):
-        count = 0
-        while count < number_of_cards:
+        """Assign cards to the player deppending of
+        the number of the cards that the player
+        is going to receive
+        """
+        for i in range(0, number_of_cards):
             card = choice(uno_deck)
             player.cards.append(card)
-            count += 1
         return player.cards
-    #this function revise if the player doesn't have any card
-    #if that is true, the player is the winner
-    def looking_for_winner(self, participant):
-        if len(participant.cards) == 0:
-            self.winner = participant
+   
+    def looking_for_winner(self, player):
+        """Check if the player has no cards
+        if it's true then the player is the winner
+        """
+        if len(player.cards) == 0:
+            self.winner = player
         else:
             self.winner = None
     
         return self.winner
     
-    #this function give the first 7 cards to all the players
+    
     def first_cards(self):
+        """ Assign the first 7 cards
+        to all the players in the game
+        """
         for player in self.players:
             self.assign_player_cards(player, 7)
-    #this function makes 
+   
     def first_card_to_match(self):
+        """Makes sure that the game start
+        with a normal card
+        """
         while self.card_to_match.category != 'Normal':
             self.card_to_match = choice(uno_deck)
     
     def change_color(self, player):
+        """Change the current card to match
+        to a color to match, the color is going
+        to be selected by the user that dropped the card
+        able to change the color
+        """
         while self.card_to_match.category != 'Colour':
             try:
                 new_color = input('Write the new color: ')
@@ -95,6 +114,8 @@ class Game():
         return self.card_to_match
      
     def verify_uno(self, player):
+        """Verify if the player only has one card
+        """
         if len(player.cards) == 1:
             if player.UNO == True:
                 print(Fore.GREEN + "You are doing well, you are about to win. Unless somebody decide to drop a 4..." + Style.RESET_ALL)
@@ -103,6 +124,11 @@ class Game():
                 self.assign_player_cards(player, 2)
 
     def player_system(self):
+        """Ask the card that the player wants to drop,
+        execute the rule of the card and then it goes
+        to the next player's turn until the game
+        finds a winner
+        """
         self.first_cards()
         while self.winner == None:
             counter = 0
@@ -230,6 +256,9 @@ class Game():
                     break
 
     def show_points(self):
+        """Show the point of all the players
+        and give all the points to the winner
+        """
         print(Fore.LIGHTMAGENTA_EX + """
         _____ _       _     _     
         |  ___(_)_ __ (_)___| |__  
@@ -255,11 +284,8 @@ class Game():
         print("{} will receive everyone's points for being the winner".format(self.winner.name))
         print('{}: {} points'.format(self.winner.name, self.winner.points))
             
-
-
 uno = Game()
 uno.ask_players_number()
 uno.first_card_to_match()
 uno.player_system()
 uno.show_points()
-

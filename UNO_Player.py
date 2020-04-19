@@ -6,6 +6,9 @@ class Player():
         self.points = 0
         self.UNO = False
     def show_all_cards(self):
+        """Show all the cards that the player has
+        """
         for i in range(0, len(self.cards)):
             print('{}: '.format(i) + self.cards[i].show_card())
         return self.cards
+        

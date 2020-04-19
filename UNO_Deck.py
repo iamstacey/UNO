@@ -9,19 +9,18 @@ class Deck():
         self.deck = []
 
     def create_a_deck(self):
+        """Create a deck creating cards
+        with the class Cards 
+        """
         for category in self.categories:
             if category == 'Change_color':
-                i = 0
-                while i < 4:
-                    change_color_card = Card(' ', '©', 'Black', category)
-                    self.deck.append(change_color_card)
-                    i += 1
+               for i in range(0, 4):
+                   change_color_card = Card(' ', '©', 'Black', category)
+                   self.deck.append(change_color_card)
             if category == 'Drag_4':
-                i = 0
-                while i < 4:
+                for i in range(0, 4):
                     drag_4_card = Card('4', '+', 'Black', category)
                     self.deck.append(drag_4_card)
-                    i += 1
             for color in self.colours:
                 if category == 'Normal':
                     for character in self.characters:

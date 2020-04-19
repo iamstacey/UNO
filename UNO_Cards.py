@@ -9,6 +9,9 @@ class Card:
     def __str__(self):
         return " {}{} ".format(self.character, self.symbol)
     def show_card(self):
+        """Show the card with the 
+        corresponding color
+        """
         if self.color == 'Red':
             return  Fore.BLACK + Back.RED + self.__str__() + Style.RESET_ALL
         elif self.color == 'Green':
