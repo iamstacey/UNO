@@ -15,6 +15,7 @@ class Game():
         self.players = []
         self.winner = None
         self.card_to_match = choice(uno_deck)
+        self.discarded_cards = []
 
     
     def ask_players_number(self):
@@ -122,7 +123,24 @@ class Game():
             else:
                 print(Fore.RED + "You didn't shout UNO and you have one card. You are going to receive two cards so you won't worry about shouting UNO." + Style.RESET_ALL)
                 self.assign_player_cards(player, 2)
-
+    def manage_card(self, player, card):
+        """delete the cards from the player
+        cards and the deck, and add it to
+        the discarded cards"""
+        player.cards.remove(card)
+        uno_deck.remove(card)
+        self.discarded_cards.append(card)
+    def verify_deck(self):
+        """If there are no enough cards
+        at the deck, add the discarded cards
+        back to the game
+        """
+        if len(uno_deck) == 5:
+            uno_deck.extend(self.discarded_cards)
+            self.discarded_cards = []
+        else:
+            pass
+            
     def player_system(self):
         """Ask the card that the player wants to drop,
         execute the rule of the card and then it goes
@@ -154,32 +172,32 @@ class Game():
                                 if dropped_card.category == 'Normal':
                                     print(Fore.GREEN + '{} dropped: {}'.format(current_player.name, dropped_card.show_card()) + Style.RESET_ALL)
                                     self.card_to_match = dropped_card
-                                    current_player.cards.remove(dropped_card)
+                                    self.manage_card(current_player, dropped_card)
                                     counter += 1
 
                                 elif dropped_card.category == 'Block':
                                     if current_player == self.players[-1]:
                                         print(Fore.GREEN + "{} can sit down and take a rest. {} blocked your next move".format(self.players[0].name, current_player.name) + Style.RESET_ALL)
                                         self.card_to_match = dropped_card
-                                        current_player.cards.remove(dropped_card)
+                                        cself.manage_card(current_player, dropped_card)
                                         counter = 1
                                     else:
                                         print(Fore.GREEN + '{} can sit down and take a rest. {} blocked your next move'.format(self.players[counter + 1].name, current_player.name) + Style.RESET_ALL)
                                         self.card_to_match = dropped_card
-                                        current_player.cards.remove(dropped_card)
+                                        self.manage_card(current_player, dropped_card)
                                         counter += 2
                                             
                                 elif dropped_card.category == 'Drag_2':
                                     if current_player == self.players[-1]:
                                         print(Fore.GREEN + '{} is going to receive a beatiful gift! {} dropped a Drag 2 card, now {} have two more cards. What a good friend'.format(self.players[0].name, current_player.name, self.players[0].name) + Style.RESET_ALL)
                                         self.card_to_match = dropped_card
-                                        current_player.cards.remove(dropped_card)
+                                        self.manage_card(current_player, dropped_card)
                                         self.assign_player_cards(self.players[0], 2)
                                         counter += 1
                                     else:
                                         print(Fore.GREEN + '{} is going to receive a beatiful gift! {} dropped a Drag 2 card, now {} have two more cards. What a good friend'.format(self.players[counter + 1].name, current_player.name, self.players[counter + 1].name) + Style.RESET_ALL)
                                         self.card_to_match = dropped_card
-                                        current_player.cards.remove(dropped_card)
+                                        self.manage_card(current_player, dropped_card)
                                         self.assign_player_cards(self.players[counter + 1], 2)
                                         counter += 1
 
@@ -192,7 +210,7 @@ class Game():
                                         i -= 1
                                     self.players = new_order
                                     self.card_to_match = dropped_card
-                                    current_player.cards.remove(dropped_card)
+                                    self.manage_card(current_player, dropped_card)
                                     counter += 1
 
                             else:                              
@@ -200,7 +218,7 @@ class Game():
                                     if dropped_card.character == self.card_to_match.character:
                                         print( Fore.GREEN +'{} dropped: {}'.format(current_player.name, dropped_card.show_card()))
                                         self.card_to_match = dropped_card
-                                        current_player.cards.remove(dropped_card)
+                                        self.manage_card(current_player, dropped_card)
                                         counter += 1
                                     else:
                                         print(Fore.RED + "This cards dosen't match. Try again" + Style.RESET_ALL)
@@ -211,21 +229,21 @@ class Game():
                                             print(Fore.GREEN + "The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[0].name) + Style.RESET_ALL)
                                             self.assign_player_cards(self.players[0], 4)
                                             self.change_color(current_player)
-                                            current_player.cards.remove(dropped_card)
+                                            self.manage_card(current_player, dropped_card)
                                             counter += 2        
                                         else:
                                             print(Fore.GREEN + "The world is shaking because of {}'s evil. This player dropped a Drag 4 card, {} must receive four cards".format(current_player.name, self.players[counter + 1].name) + Style.RESET_ALL)
                                             self.assign_player_cards(self.players[counter + 1], 4)
                                             self.change_color(current_player)
                                         
-                                            current_player.cards.remove(dropped_card)
+                                            self.manage_card(current_player, dropped_card)
                                             counter += 1
                                     else:
                                         print(Fore.GREEN + '{} drop a card to change the color'.format(current_player.name) + Style.RESET_ALL)
                                                             
                                         self.card_to_match = dropped_card
-                                        current_player.cards.remove(dropped_card)
                                         self.change_color(current_player)
+                                        self.manage_card(current_player, dropped_card)
                                         counter += 1
                                 else:
                                     print(Fore.RED + "This cards dosen't match. Try again" + Style.RESET_ALL)
@@ -250,7 +268,8 @@ class Game():
                         print(Fore.RED + "Select one of the avaible options" + Style.RESET_ALL)
                 except:
                     print(Fore.RED + "Select one of the avaible options" + Style.RESET_ALL)
-    
+
+                self.verify_deck()
                 self.looking_for_winner(current_player)  
                 if current_player == self.winner:
                     break
