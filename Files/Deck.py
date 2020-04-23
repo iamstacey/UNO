@@ -1,4 +1,4 @@
-from UNO_Cards import Card
+from Cards import Card
 
 class Deck():
     def __init__(self):
@@ -12,13 +12,14 @@ class Deck():
         """Create a deck creating cards
         with the class Cards 
         """
+        black_cards_qty = 4
         for category in self.categories:
             if category == 'Change_color':
-               for i in range(0, 4):
+               for i in range(black_cards_qty):
                    change_color_card = Card(' ', '©', 'Black', category)
                    self.deck.append(change_color_card)
             if category == 'Drag_4':
-                for i in range(0, 4):
+                for i in range(black_cards_qty):
                     drag_4_card = Card('4', '+', 'Black', category)
                     self.deck.append(drag_4_card)
             for color in self.colours:

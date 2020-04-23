@@ -1,9 +1,9 @@
 
-from UNO_Deck import Deck
-from UNO_Player import Player
+from Deck import Deck
+from Players import Player
 from random import random, choice
 from colorama import Fore, Style, init
-from UNO_Cards import Card
+from Cards import Card
 init()
 
 deck = Deck()
@@ -64,7 +64,7 @@ class Game():
         the number of the cards that the player
         is going to receive
         """
-        for i in range(0, number_of_cards):
+        for i in range(number_of_cards):
             card = choice(uno_deck)
             player.cards.append(card)
         return player.cards
