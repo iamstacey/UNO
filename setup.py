@@ -6,8 +6,3 @@ uno.player_system()
 uno.show_points()
 
 
-
-
-
-
-
