@@ -3,7 +3,6 @@ from .Cards import Card
 class UNO_Deck():
     def __init__(self):
         self.characters = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-        self.symbols = ['#', '⊘', '⇎', '⊕', '+']
         self.categories = ['Normal', 'Block', 'Reverse', 'Change_color', 'Drag_4', 'Drag_2']
         self.colours = ['Red', 'Green', 'Yellow', 'Blue']
         self.deck = []
